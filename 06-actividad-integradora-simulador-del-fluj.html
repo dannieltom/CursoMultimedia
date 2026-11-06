@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Actividad integradora: Simulador del flujo de registro del proceso — Sistema Operativo: Intermediario entre Software y Hardware</title>
+<link rel="stylesheet" href="style.css">
+<script src="app.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Sistema Operativo: Intermediario entre Software y Hardware</a>
+  <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')" aria-label="Menú">☰</button>
+</header>
+<div class="layout">
+<nav class="site-nav">
+  <ol>
+  <li><a href="index.html">Inicio</a></li>
+<li><a href="00-presentaci-n-y-diagn-stico-del-ova.html">Presentación y Diagnóstico del OVA</a></li>
+<li><a href="01-1-introducci-n.html">1. Introducción</a></li>
+<li><a href="02-2-llamada-al-sistema-system-call-y-su-fu.html">2. Llamada al Sistema (System Call) y su Función</a></li>
+<li><a href="03-3-modos-de-ejecuci-n-usuario-y-kernel.html">3. Modos de Ejecución: Usuario y Kernel</a></li>
+<li><a href="04-4-interrupciones-y-drivers-en-la-comunic.html">4. Interrupciones y Drivers en la Comunicación SO-Hardware</a></li>
+<li><a href="05-5-cierre-del-ciclo-respuesta-del-hardwar.html">5. Cierre del Ciclo: Respuesta del Hardware al Software</a></li>
+<li class="active"><a href="06-actividad-integradora-simulador-del-fluj.html">Actividad integradora: Simulador del flujo de registro del proceso</a></li>
+  </ol>
+</nav>
+<main class="content">
+<h1>Actividad integradora: Simulador del flujo de registro del proceso</h1>
+<div class="text-block"></div>
+<div class="text-block"></div>
+<div class="process">
+
+<div class="process-item process-intro">
+  <h4>Introducción al flujo de una acción en el computador</h4>
+  <div><p>En este recorrido, exploraremos cómo una acción cotidiana en tu computador pasa por diferentes etapas, desde la solicitud inicial en el software hasta la respuesta final del hardware. Identificaremos el papel de cada componente involucrado en el proceso.</p></div>
+</div>
+
+<div class="process-item process-summary">
+  <h4>Resumen del flujo de acción en el computador</h4>
+  <div><p>Desde la solicitud inicial en el software hasta la respuesta final del hardware, cada componente del computador cumple un papel fundamental para garantizar que las acciones del usuario se ejecuten de manera eficiente y segura.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>Software: Solicitud de una acción</h4>
+  <div><p>El usuario interactúa con una aplicación (por ejemplo, al hacer clic en un botón para guardar un archivo). La aplicación genera una solicitud para realizar una acción específica.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>System Call: Petición al sistema operativo</h4>
+  <div><p>La aplicación utiliza una llamada al sistema (system call) para pedirle al sistema operativo que realice la acción solicitada, como escribir datos en el disco.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>Modo Usuario/Kernel: Cambio de privilegio</h4>
+  <div><p>El sistema operativo cambia del modo usuario al modo kernel para ejecutar operaciones que requieren privilegios especiales, garantizando la seguridad y el control del sistema.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>Driver: Traducción de la solicitud</h4>
+  <div><p>El sistema operativo utiliza un controlador (driver) específico para traducir la solicitud en instrucciones que el hardware correspondiente pueda entender.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>Hardware: Ejecución física</h4>
+  <div><p>El hardware (por ejemplo, el disco duro) recibe las instrucciones y ejecuta físicamente la acción solicitada, como escribir los datos en el disco.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>Interrupción: Notificación de finalización</h4>
+  <div><p>Una vez que el hardware termina la acción, envía una señal de interrupción al sistema operativo para avisar que la tarea ha finalizado.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>Respuesta: Procesamiento y devolución del resultado</h4>
+  <div><p>El sistema operativo procesa la notificación del hardware y devuelve el resultado a la aplicación, informando que la acción se ha completado correctamente.</p></div>
+</div>
+</div>
+<div class="text-block"></div>
+
+<div class="embed-wrap">
+  <iframe src="embed-06-3.html" loading="lazy" style="width:100%;min-height:1500px;border:0;" title="Actividad interactiva"></iframe>
+  <p class="embed-link"><a href="embed-06-3.html" target="_blank" rel="noopener">Abrir esta actividad en una pestaña nueva ↗</a></p>
+</div>
+
+<div class="text-block"></div>
+<hr>
+<div class="text-block"></div>
+<div class="prevnext">
+<a class="prev" href="05-5-cierre-del-ciclo-respuesta-del-hardwar.html">← 5. Cierre del Ciclo: Respuesta del Hardware al Software</a>
+</div>
+</main>
+</div>
+<footer class="site-footer">
+  <p>Objeto Virtual de Aprendizaje — Universidad Francisco de Paula Santander (UFPS) · Ingeniería de Sistemas · Multimedia y Realidad Mixta</p>
+  <p>Juan Daniel Torres Morales · Alejandro Ovallos Torrado · Faiber Sleyder Galvis Romero</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulador del flujo de registro del proceso</title>
+<style>
+  :root{
+    --ink:#0F172A; --ink2:#334155; --mute:#64748B; --line:#E2E8F0; --bg:#FFFFFF; --soft:#F8FAFC;
+    --app:#2563EB; --app-bg:#EFF6FF; --so:#EA580C; --so-bg:#FFF7ED; --drv:#7C3AED; --drv-bg:#F5F3FF;
+    --hw:#059669; --hw-bg:#ECFDF5; --irq:#DC2626; --irq-bg:#FEF2F2;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:24px 20px 28px}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--mute)}
+  h1{font-size:clamp(22px,3.2vw,30px);margin:4px 0 6px;letter-spacing:-.015em;line-height:1.15}
+  .lead{color:var(--ink2);font-size:15px;line-height:1.5;margin:0 0 18px;max-width:760px}
+
+  /* choose action */
+  .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+  .act{all:unset;cursor:pointer;border:2px solid var(--line);border-radius:14px;padding:14px 16px;background:#fff;display:flex;gap:12px;align-items:center;transition:border-color .2s, box-shadow .2s, transform .1s}
+  .act:hover{border-color:#93C5FD}
+  .act:focus-visible{outline:3px solid #93C5FD;outline-offset:2px}
+  .act[aria-pressed="true"]{border-color:var(--app);box-shadow:0 0 0 4px #DBEAFE}
+  .act .ico{width:40px;height:40px;border-radius:10px;background:var(--app-bg);display:flex;align-items:center;justify-content:center;flex:none}
+  .act b{display:block;font-size:15.5px}
+  .act span{font-size:13px;color:var(--mute)}
+
+  /* pipeline */
+  .pipe{display:flex;gap:6px;margin:0 0 16px;overflow-x:auto;padding-bottom:4px}
+  .pip{flex:1;min-width:96px;border-radius:10px;padding:8px 10px;background:var(--soft);border:1.5px solid var(--line);font-size:12.5px;font-weight:700;color:var(--mute);position:relative;transition:all .25s}
+  .pip small{display:block;font-weight:600;font-size:11px;color:#94A3B8;margin-top:2px}
+  .pip.done{background:#fff;color:var(--ink2);border-color:#CBD5E1}
+  .pip.now{background:var(--ink);border-color:var(--ink);color:#fff}
+  .pip.now small{color:#CBD5E1}
+
+  .main{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;align-items:start}
+  @media (max-width:780px){.main{grid-template-columns:1fr}.actions{grid-template-columns:1fr}}
+
+  /* stage */
+  .stage{position:relative;border:1.5px solid var(--line);border-radius:16px;background:var(--soft);padding:14px}
+  .mode{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:12.5px;color:var(--mute);font-weight:600}
+  .modechip{padding:4px 10px;border-radius:999px;font-weight:800;letter-spacing:.04em;font-size:11.5px;transition:all .3s}
+  .modechip.user{background:var(--app-bg);color:#1D4ED8;border:1.5px solid #BFDBFE}
+  .modechip.kernel{background:var(--so-bg);color:#C2410C;border:1.5px solid #FED7AA}
+  .band{border-radius:12px;padding:6px;position:relative}
+  .band.user{background:#EAF2FF}
+  .band.kern{background:#FFF1E4}
+  .bandlbl{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px 6px}
+  .band.user .bandlbl{color:#1D4ED8}.band.kern .bandlbl{color:#C2410C}
+  .layer{border:2px solid;border-radius:12px;background:#fff;padding:10px 128px 10px 12px;min-height:58px;display:flex;align-items:center;gap:10px;transition:box-shadow .3s, transform .3s;position:relative}
+  .layer + .layer{margin-top:8px}
+  .layer .lt{font-weight:800;font-size:14.5px}
+  .layer .ls{font-size:12.5px;color:var(--mute)}
+  .layer.on{box-shadow:0 0 0 4px rgba(15,23,42,.10);transform:scale(1.015)}
+  .l-app{border-color:var(--app)}.l-app .lt{color:#1D4ED8}
+  .l-so{border-color:var(--so)}.l-so .lt{color:#C2410C}
+  .l-drv{border-color:var(--drv)}.l-drv .lt{color:#6D28D9}
+  .l-hw{border-color:var(--hw)}.l-hw .lt{color:#047857}
+  .gate{margin:8px 0;height:30px;display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--ink);text-transform:uppercase;transition:all .3s}
+  .gate:before,.gate:after{content:"";flex:1;border-top:2px dashed #94A3B8}
+  .gate span{background:#fff;border:2px solid var(--ink);border-radius:999px;padding:3px 10px;transition:all .3s}
+  .gate.on span{background:var(--ink);color:#fff}
+  .hwzone{margin-top:8px}
+  .badge{display:none;margin-top:6px;font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;width:max-content}
+  .badge.show{display:block;animation:in .35s forwards}
+  .toast{display:none;margin-top:6px;width:max-content;background:#065F46;color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px}
+  .toast.show{display:block;animation:in .35s forwards}
+  .busy{display:none;margin-top:6px;font-size:11.5px;font-weight:700;color:#047857;align-items:center;gap:6px}
+  .busy.show{display:flex}
+  .busy i{width:12px;height:12px;border-radius:50%;border:2.5px solid #A7F3D0;border-top-color:var(--hw);animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .token{position:absolute;left:0;top:0;z-index:5;min-width:30px;height:30px;padding:0 10px;border-radius:999px;background:var(--ink);color:#fff;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:5px;box-shadow:0 6px 16px rgba(15,23,42,.25);transition:left .7s cubic-bezier(.4,0,.2,1), top .7s cubic-bezier(.4,0,.2,1), background .3s;pointer-events:none;white-space:nowrap}
+  .token.irq{background:var(--irq)}
+  .token.ok{background:var(--hw)}
+  @media (prefers-reduced-motion:reduce){.token,.layer,.pip{transition:none}.busy{animation:none}}
+
+  /* panel */
+  .panel{border:1.5px solid var(--line);border-radius:16px;padding:18px;background:#fff}
+  .stepno{font-size:12px;font-weight:700;color:var(--mute);letter-spacing:.06em;text-transform:uppercase}
+  .steph{font-size:21px;font-weight:800;margin:4px 0 10px;letter-spacing:-.01em}
+  .sub{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:5px 10px;border-radius:999px;margin-bottom:12px}
+  .ptext{font-size:15px;line-height:1.55;color:var(--ink2);margin:0 0 12px}
+  .inside{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.5;color:var(--ink2)}
+  .inside b{color:var(--ink)}
+  code{font-family:"DejaVu Sans Mono",Consolas,Menlo,monospace;font-size:12.5px;background:var(--ink);color:#E2E8F0;padding:2px 7px;border-radius:6px}
+  .ctrls{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .btn{all:unset;cursor:pointer;font-weight:700;font-size:14px;padding:10px 16px;border-radius:10px;border:1.5px solid #CBD5E1;background:#fff;color:var(--ink);transition:background .2s}
+  .btn:hover{background:var(--soft)}
+  .btn:focus-visible{outline:3px solid #93C5FD;outline-offset:2px}
+  .btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}
+  .btn.pri:hover{background:#1E293B}
+  .btn[disabled]{opacity:.4;cursor:default}
+
+  /* log */
+  .log{margin-top:18px;border-radius:14px;background:#0B1220;color:#CBD5E1;padding:14px 16px;font-family:"DejaVu Sans Mono",Consolas,Menlo,monospace;font-size:12.5px;line-height:1.6;min-height:70px}
+  .log .h{color:#94A3B8;font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between}
+  .log .row{opacity:0;transform:translateY(4px);animation:in .35s forwards}
+  .log .row .t{color:#64748B}
+  @keyframes in{to{opacity:1;transform:none}}
+  .empty{color:#64748B}
+  .final{display:none;margin-top:14px;background:var(--hw-bg);border:1.5px solid #A7F3D0;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.5;color:#065F46}
+  .final.show{display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Actividad integradora · Todas las subtemáticas</div>
+  <h1>Simulador del flujo de registro del proceso</h1>
+  <p class="lead">Seleccione una acción cotidiana y observe, paso a paso, cómo recorre todo el ciclo: Software → System Call → Modo usuario/kernel → Driver → Hardware → Interrupción → Respuesta. En cada paso se resalta la subtemática correspondiente.</p>
+
+  <div class="actions" role="group" aria-label="Acción a simular" id="actions"></div>
+
+  <div class="pipe" id="pipe" aria-hidden="true"></div>
+
+  <div class="main">
+    <div class="stage" id="stage">
+      <div class="mode"><span>Estado del procesador</span><span class="modechip user" id="modechip">MODO USUARIO</span></div>
+      <div class="band user">
+        <div class="bandlbl">Modo usuario · privilegios restringidos</div>
+        <div class="layer l-app" id="L-app">
+          <div><div class="lt" id="appName">Aplicación</div><div class="ls">Software del usuario</div><div class="toast" id="toast">✓ Listo</div></div>
+        </div>
+      </div>
+      <div class="gate" id="L-gate"><span>System Call</span></div>
+      <div class="band kern">
+        <div class="bandlbl">Modo kernel · privilegios completos</div>
+        <div class="layer l-so" id="L-so">
+          <div><div class="lt">Sistema Operativo (kernel)</div><div class="ls" id="soSub">Núcleo y manejador de interrupciones</div><span class="badge" id="handler" style="background:var(--irq-bg);color:#B91C1C">⚡ Manejador de interrupción activo</span></div>
+        </div>
+        <div class="layer l-drv" id="L-drv">
+          <div><div class="lt" id="drvName">Driver</div><div class="ls">Traduce la orden al dispositivo</div></div>
+        </div>
+      </div>
+      <div class="hwzone">
+        <div class="layer l-hw" id="L-hw">
+          <div><div class="lt" id="hwName">Hardware</div><div class="ls">Dispositivo físico</div><div class="busy" id="busy"><i></i>Trabajando…</div></div>
+        </div>
+      </div>
+      <div class="token" id="token">●</div>
+    </div>
+
+    <div>
+      <div class="panel" aria-live="polite">
+        <div class="stepno" id="stepno">Paso 0 de 7</div>
+        <div class="steph" id="steph">Elija una acción para comenzar</div>
+        <div class="sub" id="sub" style="display:none"></div>
+        <p class="ptext" id="ptext">Cada acción sigue el mismo ciclo, pero con una aplicación, un driver y un dispositivo distintos.</p>
+        <div class="inside" id="inside" style="display:none"></div>
+        <div class="ctrls">
+          <button class="btn" id="prev" disabled>← Anterior</button>
+          <button class="btn pri" id="next" disabled>Siguiente →</button>
+          <button class="btn" id="auto" disabled>▶ Reproducir</button>
+          <button class="btn" id="reset" disabled>↺ Reiniciar</button>
+        </div>
+        <div class="final" id="final"></div>
+      </div>
+      <div class="log" id="log"><div class="h"><span>Registro del proceso</span><span id="logCount">0/7</span></div><div class="empty" id="logEmpty">Aquí se irá registrando cada etapa del recorrido.</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUBS = {
+  "1.1": ["Subtemática 1.1 · El SO como intermediario", "#EFF6FF", "#1D4ED8"],
+  "2.1": ["Subtemática 2.1 · Llamada al sistema", "#F1F5F9", "#0F172A"],
+  "3.1": ["Subtemática 3.1 · Modo usuario vs. modo kernel", "#FFF7ED", "#C2410C"],
+  "4.2": ["Subtemática 4.2 · El driver como traductor", "#F5F3FF", "#6D28D9"],
+  "4.1": ["Subtemática 4.1 · Interrupciones", "#FEF2F2", "#B91C1C"],
+  "5.1": ["Subtemática 5.1 · Cierre del ciclo", "#ECFDF5", "#047857"]
+};
+const PIPE = [["Software","1.1"],["System Call","2.1"],["Modo U/K","3.1"],["Driver","4.2"],["Hardware","4.2"],["Interrupción","4.1"],["Respuesta","5.1"]];
+
+const ACTIONS = {
+  guardar: {
+    label:"Guardar un archivo", hint:"Editor de texto → disco",
+    icon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3"/><rect x="8" y="13" width="8" height="5"/></svg>',
+    app:"Editor de texto", proc:"editor", drv:"Driver del disco", hw:"Disco (SSD)", file:"informe.docx",
+    ok:"✓ Documento guardado",
+    steps:[
+      {t:"La aplicación necesita el hardware", p:"El usuario pulsa “Guardar” en el editor de texto. El editor tiene los datos en su memoria, pero no puede escribir en el disco por sí mismo: necesita pedírselo al Sistema Operativo.", i:"<b>¿Por qué?</b> Ninguna aplicación tiene permiso para acceder directamente al hardware. El SO actúa como intermediario.", log:"editor (modo usuario) quiere guardar “informe.docx”"},
+      {t:"Invoca una System Call", p:"El editor hace una llamada al sistema para solicitar formalmente el servicio de escritura.", i:"<b>Lo que se ejecuta:</b> <code>write(archivo, datos, tamaño)</code>. Es la puerta de entrada controlada hacia el kernel.", log:"syscall write(“informe.docx”, 24 KB)"},
+      {t:"Cambio de modo usuario → kernel", p:"El procesador detiene momentáneamente al editor y pasa a modo kernel. Ahora el Sistema Operativo tiene privilegios completos y valida la solicitud (¿existe el archivo?, ¿hay permiso para escribir?).", i:"<b>Importante:</b> el cambio de modo no lo decide la aplicación; lo controla el hardware del procesador.", log:"CPU: modo usuario → modo kernel · solicitud validada"},
+      {t:"El driver traduce la orden", p:"El SO entrega la orden genérica “escribir estos bloques” al driver del disco, que la traduce a los comandos específicos que entiende ese modelo de disco.", i:"<b>Ejemplo:</b> para un SSD NVMe, el driver genera un comando <code>NVMe Write</code>.", log:"driver del disco: “escribir bloques” → comando NVMe Write"},
+      {t:"El hardware ejecuta la operación", p:"El disco recibe los comandos y escribe físicamente los datos. Mientras tanto, el procesador no se queda esperando: sigue atendiendo otros procesos.", i:"<b>Fíjese:</b> la CPU queda libre durante la escritura; por eso se necesita un aviso cuando el disco termine.", log:"disco: escribiendo datos… (CPU atiende otros procesos)"},
+      {t:"Interrupción: el hardware avisa", p:"Cuando termina, el disco genera una interrupción (IRQ). El procesador pausa lo que hacía y ejecuta el manejador de interrupción del Sistema Operativo.", i:"<b>El manejador</b> verifica si la escritura fue correcta y prepara el resultado para el editor.", log:"IRQ del disco · manejador de interrupción: escritura correcta"},
+      {t:"Respuesta a la aplicación", p:"El SO devuelve el resultado al editor y el procesador vuelve a modo usuario. El editor muestra “Documento guardado”. Para la aplicación todo el recorrido fue invisible.", i:"<b>Cierre del ciclo:</b> el SO no solo lleva la solicitud al hardware, también gestiona el camino de regreso.", log:"CPU: modo kernel → modo usuario · write() devuelve OK"}
+    ]
+  },
+  imprimir: {
+    label:"Imprimir un documento", hint:"Procesador de texto → impresora",
+    icon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>',
+    app:"Procesador de texto", proc:"procesador_texto", drv:"Driver de la impresora", hw:"Impresora", file:"taller.pdf",
+    ok:"✓ Impresión completada",
+    steps:[
+      {t:"La aplicación necesita el hardware", p:"El usuario elige “Imprimir”. La aplicación tiene las páginas listas, pero no puede enviar nada a la impresora directamente: debe pedírselo al Sistema Operativo.", i:"<b>¿Por qué?</b> Si cada programa usara la impresora a su manera, dos documentos podrían mezclarse. El SO ordena el acceso.", log:"procesador_texto (modo usuario) quiere imprimir 3 páginas"},
+      {t:"Invoca una System Call", p:"La aplicación hace una llamada al sistema para enviar el trabajo de impresión al Sistema Operativo.", i:"<b>Lo que se ejecuta:</b> una llamada como <code>write(impresora, páginas)</code>, que entrega el trabajo al kernel.", log:"syscall write(impresora, 3 páginas)"},
+      {t:"Cambio de modo usuario → kernel", p:"El procesador pasa a modo kernel. El SO recibe el trabajo, comprueba que la impresora existe y lo pone en orden junto con otros trabajos que estén esperando.", i:"<b>Importante:</b> en modo kernel el SO puede controlar el dispositivo; la aplicación nunca lo hace directamente.", log:"CPU: modo usuario → modo kernel · trabajo en cola"},
+      {t:"El driver traduce la orden", p:"El SO pasa las páginas al driver de la impresora, que las convierte al lenguaje particular de ese modelo de impresora.", i:"<b>Ejemplo:</b> el driver traduce las páginas a un lenguaje de impresora como <code>PCL</code> o <code>PostScript</code>.", log:"driver de la impresora: páginas → lenguaje PCL"},
+      {t:"El hardware ejecuta la operación", p:"La impresora recibe los datos y empieza a imprimir. Mientras tanto, el procesador sigue atendiendo otros procesos.", i:"<b>Fíjese:</b> imprimir es lento comparado con la CPU; por eso no tiene sentido que el procesador espere.", log:"impresora: imprimiendo… (CPU atiende otros procesos)"},
+      {t:"Interrupción: el hardware avisa", p:"Al terminar (o si se queda sin papel), la impresora genera una interrupción. El manejador de interrupción del SO atiende el aviso.", i:"<b>El manejador</b> revisa el estado: si todo salió bien, marca el trabajo como completado.", log:"IRQ de la impresora · manejador: trabajo completado"},
+      {t:"Respuesta a la aplicación", p:"El SO informa el resultado y el procesador vuelve a modo usuario. El usuario ve “Impresión completada”.", i:"<b>Cierre del ciclo:</b> la aplicación solo pidió imprimir y recibió la confirmación; el resto lo gestionó el SO.", log:"CPU: modo kernel → modo usuario · impresión OK"}
+    ]
+  },
+  enviar: {
+    label:"Enviar un mensaje", hint:"Navegador → tarjeta de red",
+    icon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>',
+    app:"Navegador (chat)", proc:"navegador", drv:"Driver de la tarjeta de red", hw:"Tarjeta de red", file:"mensaje",
+    ok:"✓ Mensaje enviado",
+    steps:[
+      {t:"La aplicación necesita el hardware", p:"El usuario escribe un mensaje en un chat web y pulsa “Enviar”. El navegador no puede usar la tarjeta de red directamente: necesita al Sistema Operativo.", i:"<b>¿Por qué?</b> Muchas aplicaciones usan la red al mismo tiempo; el SO reparte ese recurso de forma ordenada.", log:"navegador (modo usuario) quiere enviar un mensaje"},
+      {t:"Invoca una System Call", p:"El navegador hace una llamada al sistema para entregar los datos que quiere enviar por la red.", i:"<b>Lo que se ejecuta:</b> <code>send(conexión, mensaje)</code>.", log:"syscall send(conexión, 512 bytes)"},
+      {t:"Cambio de modo usuario → kernel", p:"El procesador pasa a modo kernel. El SO prepara los datos para viajar por la red (los divide en paquetes y les agrega la dirección de destino).", i:"<b>Importante:</b> solo el kernel puede preparar y entregar paquetes al hardware de red.", log:"CPU: modo usuario → modo kernel · paquetes preparados"},
+      {t:"El driver traduce la orden", p:"El SO entrega los paquetes al driver de la tarjeta de red, que los coloca en el formato y en las zonas de memoria que espera ese modelo de tarjeta.", i:"<b>Ejemplo:</b> cada fabricante de tarjetas de red define sus propios registros y comandos; el driver los conoce.", log:"driver de red: paquetes → comandos de la tarjeta"},
+      {t:"El hardware ejecuta la operación", p:"La tarjeta de red convierte los datos en señales y los transmite. Mientras tanto, el procesador sigue con otros procesos.", i:"<b>Fíjese:</b> la transmisión ocurre en el hardware; la CPU no participa en cada bit.", log:"tarjeta de red: transmitiendo… (CPU atiende otros procesos)"},
+      {t:"Interrupción: el hardware avisa", p:"Cuando termina de transmitir, la tarjeta genera una interrupción. El manejador de interrupción del SO la atiende.", i:"<b>El manejador</b> confirma que los paquetes salieron y libera la memoria que usaban.", log:"IRQ de la tarjeta de red · manejador: transmisión correcta"},
+      {t:"Respuesta a la aplicación", p:"El SO devuelve el resultado al navegador y el procesador vuelve a modo usuario. En pantalla aparece el mensaje como enviado.", i:"<b>Cierre del ciclo:</b> del clic en “Enviar” a la confirmación, el SO gestionó la ida y el regreso.", log:"CPU: modo kernel → modo usuario · send() devuelve OK"}
+    ]
+  }
+};
+
+const $ = id => document.getElementById(id);
+let cur = null, step = 0, timer = null;
+
+// Build action buttons and pipeline
+Object.entries(ACTIONS).forEach(([k, a]) => {
+  const b = document.createElement("button");
+  b.className = "act"; b.setAttribute("aria-pressed", "false"); b.dataset.k = k;
+  b.innerHTML = `<div class="ico">${a.icon}</div><div><b>${a.label}</b><span>${a.hint}</span></div>`;
+  b.onclick = () => choose(k);
+  $("actions").appendChild(b);
+});
+PIPE.forEach(([n, s], i) => {
+  const d = document.createElement("div");
+  d.className = "pip"; d.innerHTML = `${i + 1}. ${n}<small>Subtema ${s}</small>`;
+  $("pipe").appendChild(d);
+});
+
+function moveToken(targetId, side) {
+  const st = $("stage").getBoundingClientRect();
+  const el = $(targetId).getBoundingClientRect();
+  const tk = $("token");
+  const x = (side === "left" ? el.left - st.left + 14 : el.right - st.left - tk.offsetWidth - 14);
+  const y = el.top - st.top + el.height / 2 - 15;
+  tk.style.left = Math.max(6, x) + "px"; tk.style.top = y + "px";
+}
+
+function choose(k) {
+  stopAuto();
+  cur = k; step = 0;
+  document.querySelectorAll(".act").forEach(b => b.setAttribute("aria-pressed", b.dataset.k === k));
+  const a = ACTIONS[k];
+  $("appName").textContent = a.app; $("drvName").textContent = a.drv; $("hwName").textContent = a.hw;
+  $("toast").textContent = a.ok;
+  $("log").querySelectorAll(".row").forEach(r => r.remove());
+  $("logEmpty").style.display = "none";
+  ["next", "auto", "reset"].forEach(id => $(id).disabled = false);
+  go(1);
+}
+
+function go(n) {
+  const a = ACTIONS[cur];
+  step = Math.min(Math.max(n, 1), 7);
+  const s = a.steps[step - 1];
+  const sub = PIPE[step - 1][1];
+  // panel
+  $("stepno").textContent = `Paso ${step} de 7 · ${PIPE[step - 1][0]}`;
+  $("steph").textContent = s.t;
+  const [sl, sbg, sfg] = SUBS[sub];
+  const sb = $("sub"); sb.style.display = "inline-flex"; sb.textContent = sl; sb.style.background = sbg; sb.style.color = sfg; sb.style.border = `1.5px solid ${sfg}33`;
+  $("ptext").textContent = s.p;
+  $("inside").style.display = "block"; $("inside").innerHTML = s.i;
+  $("prev").disabled = step === 1;
+  $("next").disabled = step === 7;
+  // pipeline
+  document.querySelectorAll(".pip").forEach((p, i) => { p.className = "pip" + (i + 1 < step ? " done" : i + 1 === step ? " now" : ""); });
+  // stage
+  ["L-app", "L-so", "L-drv", "L-hw"].forEach(id => $(id).classList.remove("on"));
+  $("L-gate").classList.remove("on");
+  $("busy").classList.toggle("show", step === 5);
+  $("handler").classList.toggle("show", step === 6);
+  $("toast").classList.toggle("show", step === 7);
+  const kernel = step >= 3 && step <= 6;
+  const mc = $("modechip"); mc.className = "modechip " + (kernel ? "kernel" : "user"); mc.textContent = kernel ? "MODO KERNEL" : "MODO USUARIO";
+  const tk = $("token"); tk.className = "token";
+  const map = {1: ["L-app", "right", "Solicitud"], 2: ["L-gate", "right", "System Call"], 3: ["L-so", "right", "Solicitud"], 4: ["L-drv", "right", "Orden"], 5: ["L-hw", "right", "Comandos"], 6: ["L-so", "right", "⚡ IRQ"], 7: ["L-app", "right", "Resultado"]};
+  const [tgt, side, lbl] = map[step];
+  if (tgt === "L-gate") $("L-gate").classList.add("on"); else $(tgt).classList.add("on");
+  if (step === 6) { tk.classList.add("irq"); $("L-hw").classList.add("on"); }
+  if (step === 7) tk.classList.add("ok");
+  tk.textContent = lbl;
+  requestAnimationFrame(() => moveToken(tgt, side));
+  // log: keep rows 1..step
+  const rows = [...$("log").querySelectorAll(".row")];
+  rows.slice(step).forEach(r => r.remove());
+  for (let i = rows.length; i < step; i++) {
+    const r = document.createElement("div"); r.className = "row";
+    r.innerHTML = `<span class="t">[${String(i + 1).padStart(2, "0")}]</span> ${a.steps[i].log}`;
+    $("log").appendChild(r);
+  }
+  $("logCount").textContent = `${step}/7`;
+  // final message
+  const f = $("final");
+  if (step === 7) {
+    f.innerHTML = `<b>Recorrido completo.</b> “${a.label}” pasó por los 7 pasos del ciclo. Pruebe ahora con otra acción y compare: cambian la aplicación, el driver y el dispositivo, pero el ciclo es siempre el mismo.`;
+    f.classList.add("show");
+  } else f.classList.remove("show");
+}
+
+function stopAuto() { if (timer) { clearInterval(timer); timer = null; } $("auto").textContent = "▶ Reproducir"; }
+$("next").onclick = () => { stopAuto(); go(step + 1); };
+$("prev").onclick = () => { stopAuto(); go(step - 1); };
+$("reset").onclick = () => { stopAuto(); $("log").querySelectorAll(".row").forEach(r => r.remove()); go(1); };
+$("auto").onclick = () => {
+  if (timer) return stopAuto();
+  if (step >= 7) { $("log").querySelectorAll(".row").forEach(r => r.remove()); go(1); }
+  $("auto").textContent = "❚❚ Pausar";
+  timer = setInterval(() => { if (step >= 7) return stopAuto(); go(step + 1); }, 3500);
+};
+window.addEventListener("resize", () => { if (cur) go(step); });
+
+// initial token position
+requestAnimationFrame(() => { moveToken("L-app", "right"); $("token").textContent = "●"; });
+</script>
+</body>
+</html>

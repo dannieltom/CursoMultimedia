@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4. Interrupciones y Drivers en la Comunicación SO-Hardware — Sistema Operativo: Intermediario entre Software y Hardware</title>
+<link rel="stylesheet" href="style.css">
+<script src="app.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Sistema Operativo: Intermediario entre Software y Hardware</a>
+  <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')" aria-label="Menú">☰</button>
+</header>
+<div class="layout">
+<nav class="site-nav">
+  <ol>
+  <li><a href="index.html">Inicio</a></li>
+<li><a href="00-presentaci-n-y-diagn-stico-del-ova.html">Presentación y Diagnóstico del OVA</a></li>
+<li><a href="01-1-introducci-n.html">1. Introducción</a></li>
+<li><a href="02-2-llamada-al-sistema-system-call-y-su-fu.html">2. Llamada al Sistema (System Call) y su Función</a></li>
+<li><a href="03-3-modos-de-ejecuci-n-usuario-y-kernel.html">3. Modos de Ejecución: Usuario y Kernel</a></li>
+<li class="active"><a href="04-4-interrupciones-y-drivers-en-la-comunic.html">4. Interrupciones y Drivers en la Comunicación SO-Hardware</a></li>
+<li><a href="05-5-cierre-del-ciclo-respuesta-del-hardwar.html">5. Cierre del Ciclo: Respuesta del Hardware al Software</a></li>
+<li><a href="06-actividad-integradora-simulador-del-fluj.html">Actividad integradora: Simulador del flujo de registro del proceso</a></li>
+  </ol>
+</nav>
+<main class="content">
+<h1>4. Interrupciones y Drivers en la Comunicación SO-Hardware</h1>
+<div class="text-block"></div>
+<div class="text-block"></div>
+
+<figure class="course-image">
+  <img src="distintos-dispositivos-de-.jpg" alt="" loading="lazy">
+  <figcaption><div data-editor-id="13cbd486-6053-4a1b-8dc1-00e6b177a971"><p><span style="font-size: 1.3rem">distintos dispositivos de hardware conectados a un computador (impresora, mouse, memoria USB, tarjeta de red).</span></p></div></figcaption>
+</figure>
+
+<figure class="course-video">
+  <video controls preload="metadata">
+    <source src="" type="video/mp4">
+    Tu navegador no soporta video HTML5.
+  </video>
+  <figcaption></figcaption>
+</figure>
+<div class="text-block"></div>
+<div class="text-block"></div>
+
+<figure class="course-image">
+  <img src="4-1_diagrama_flujo_interru.png" alt="" loading="lazy">
+  <figcaption><div data-editor-id="1782cd2f-70bd-4b2c-9dff-8336c5f2b365"><p><span style="font-size: 1.2rem">Hardware → CPU → rutina de atención</span></p></div></figcaption>
+</figure>
+<div class="text-block"></div>
+<div class="text-block"></div>
+
+<figure class="course-image">
+  <img src="4-2_esquema_driver_traduct.jpg" alt="" loading="lazy">
+  <figcaption><div data-editor-id="165750fe-bf54-44eb-86eb-9ce97d11c3c7"><p><span style="font-size: 1.2rem">el driver como traductor entre el SO y el hardware</span></p></div></figcaption>
+</figure>
+<div class="text-block"></div>
+<div class="text-block"></div>
+<div class="accordion">
+
+<details class="accordion-item">
+  <summary>¿Por qué el SO no se comunica directamente con cada dispositivo sin drivers?</summary>
+  <div class="accordion-body"><p>El sistema operativo (SO) utiliza drivers para comunicarse con los dispositivos porque estos actúan como intermediarios que traducen las instrucciones del SO en comandos específicos que el hardware puede entender. Sin drivers, el SO tendría que incluir soporte para cada dispositivo existente, lo cual sería impráctico y poco eficiente.</p><p></p><p>Los drivers permiten una mayor flexibilidad y modularidad, ya que cada dispositivo puede tener su propio controlador especializado que se integra con el SO sin necesidad de modificarlo directamente.</p></div>
+</details>
+
+<details class="accordion-item">
+  <summary>¿Qué ventajas aporta el mecanismo de interrupciones frente a la espera activa?</summary>
+  <div class="accordion-body"><p>El mecanismo de interrupciones permite que el procesador realice otras tareas mientras espera eventos de los dispositivos, en lugar de permanecer en un estado de espera activa que consume recursos constantemente. Esto mejora la eficiencia del sistema y reduce el consumo de energía.</p><p></p><p>Además, las interrupciones aseguran una respuesta más rápida a eventos importantes, ya que el procesador puede ser notificado inmediatamente cuando ocurre un evento, en lugar de depender de verificaciones periódicas.</p></div>
+</details>
+
+<details class="accordion-item">
+  <summary>¿Cómo se relacionan el manejador de interrupciones y el driver en el procesamiento de una solicitud?</summary>
+  <div class="accordion-body"><p>El manejador de interrupciones es responsable de capturar las señales de interrupción generadas por los dispositivos y notificar al sistema operativo. Una vez que se procesa la interrupción, el driver correspondiente toma el control para manejar los detalles específicos del dispositivo.</p><p></p><p>Esta colaboración asegura que las interrupciones sean gestionadas de manera eficiente y que las operaciones del dispositivo se realicen correctamente, manteniendo la estabilidad y funcionalidad del sistema.</p></div>
+</details>
+
+<details class="accordion-item">
+  <summary>¿Qué riesgos existirían si un driver estuviera mal diseñado o manipulado?</summary>
+  <div class="accordion-body"><p>Un driver mal diseñado o manipulado puede causar inestabilidad en el sistema operativo, como bloqueos o errores inesperados. Además, puede exponer vulnerabilidades de seguridad que podrían ser explotadas por atacantes para comprometer el sistema.</p><p></p><p>Por esta razón, es crucial que los drivers sean desarrollados y mantenidos siguiendo estándares estrictos de calidad y seguridad, y que provengan de fuentes confiables.</p></div>
+</details>
+</div>
+<div class="text-block"></div>
+<div class="flashcard-grid">
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>INTERRUPCIÓN</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Una señal que indica al procesador que debe detener su tarea actual para atender un evento específico.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>DRIVER</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Software que permite la comunicación entre el sistema operativo y un dispositivo de hardware.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>MANEJADOR DE INTERRUPCIONES</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Un programa que gestiona las interrupciones y determina cómo responder a ellas.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>CONTROLADOR</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Un dispositivo o software que regula el funcionamiento de un componente de hardware.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>DISPOSITIVO</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Un componente de hardware que realiza una función específica dentro de un sistema informático.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>VECTOR</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Una dirección en memoria que apunta al manejador de interrupciones correspondiente.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>NÚCLEO</strong></div>
+    <div class="flashcard-face flashcard-back"><p>La unidad central de procesamiento que ejecuta instrucciones en un sistema informático.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>IRQ</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Una línea de hardware que permite a los dispositivos solicitar atención del procesador.</p></div>
+  </div>
+</div>
+</div>
+<p class="hint">Haz clic en cada tarjeta para ver la respuesta.</p>
+<div class="text-block"></div>
+
+<div class="embed-wrap">
+  <iframe src="embed-04-2.html" loading="lazy" style="width:100%;min-height:760px;border:0;" title="Actividad interactiva"></iframe>
+  <p class="embed-link"><a href="embed-04-2.html" target="_blank" rel="noopener">Abrir esta actividad en una pestaña nueva ↗</a></p>
+</div>
+
+<hr>
+<div class="text-block"></div>
+<div class="prevnext">
+<a class="prev" href="03-3-modos-de-ejecuci-n-usuario-y-kernel.html">← 3. Modos de Ejecución: Usuario y Kernel</a>
+<a class="next" href="05-5-cierre-del-ciclo-respuesta-del-hardwar.html">5. Cierre del Ciclo: Respuesta del Hardware al Software →</a>
+</div>
+</main>
+</div>
+<footer class="site-footer">
+  <p>Objeto Virtual de Aprendizaje — Universidad Francisco de Paula Santander (UFPS) · Ingeniería de Sistemas · Multimedia y Realidad Mixta</p>
+  <p>Juan Daniel Torres Morales · Alejandro Ovallos Torrado · Faiber Sleyder Galvis Romero</p>
+</footer>
+</body>
+</html>

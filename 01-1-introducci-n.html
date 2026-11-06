@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1. Introducción — Sistema Operativo: Intermediario entre Software y Hardware</title>
+<link rel="stylesheet" href="style.css">
+<script src="app.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Sistema Operativo: Intermediario entre Software y Hardware</a>
+  <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')" aria-label="Menú">☰</button>
+</header>
+<div class="layout">
+<nav class="site-nav">
+  <ol>
+  <li><a href="index.html">Inicio</a></li>
+<li><a href="00-presentaci-n-y-diagn-stico-del-ova.html">Presentación y Diagnóstico del OVA</a></li>
+<li class="active"><a href="01-1-introducci-n.html">1. Introducción</a></li>
+<li><a href="02-2-llamada-al-sistema-system-call-y-su-fu.html">2. Llamada al Sistema (System Call) y su Función</a></li>
+<li><a href="03-3-modos-de-ejecuci-n-usuario-y-kernel.html">3. Modos de Ejecución: Usuario y Kernel</a></li>
+<li><a href="04-4-interrupciones-y-drivers-en-la-comunic.html">4. Interrupciones y Drivers en la Comunicación SO-Hardware</a></li>
+<li><a href="05-5-cierre-del-ciclo-respuesta-del-hardwar.html">5. Cierre del Ciclo: Respuesta del Hardware al Software</a></li>
+<li><a href="06-actividad-integradora-simulador-del-fluj.html">Actividad integradora: Simulador del flujo de registro del proceso</a></li>
+  </ol>
+</nav>
+<main class="content">
+<h1>1. Introducción</h1>
+<div class="text-block"></div>
+<div class="text-block"></div>
+
+<figure class="course-image">
+  <img src="hombre.jpg" alt="" loading="lazy">
+  <figcaption><div data-editor-id="39049b06-4513-49a6-80f3-53da01ff6006"><p><em>Imagen ilustrativa de un usuario utilizando una aplicación cotidiana en su computador (procesador de texto, reproductor multimedia, navegador)</em></p></div></figcaption>
+</figure>
+<div class="text-block"></div>
+
+<figure class="course-video">
+  <video controls poster="videoIntroductorio.png" preload="metadata">
+    <source src="videoIntroductorio.mp4" type="video/mp4">
+    Tu navegador no soporta video HTML5.
+  </video>
+  <figcaption><div data-editor-id="ec5a0dcc-4e59-46b4-a33e-4661d61555a7"><p style="margin-left: 4rem; text-align: left"><span style="font-size: 1.2rem"><em>Video interactivo introductorio propio - introducción a los sistemas operativos</em></span></p></div></figcaption>
+</figure>
+
+<figure class="course-video">
+  <video controls preload="metadata">
+    <source src="" type="video/mp4">
+    Tu navegador no soporta video HTML5.
+  </video>
+  <figcaption></figcaption>
+</figure>
+<div class="text-block"></div>
+<div class="text-block"></div>
+
+<figure class="course-image">
+  <img src="1-1_esquema_con_vs_sin_SO.jpg" alt="" loading="lazy">
+  <figcaption><div data-editor-id="21936164-9ada-447f-9a7d-917cc0542c12"><p><span style="font-size: 1.2rem">esquema comparativo “con SO” vs. “sin SO” (generado con IA)</span></p></div></figcaption>
+</figure>
+<div class="text-block"></div>
+<div class="accordion">
+<div class="kc"><p class="kc-title">¿Por qué no se permite el acceso directo de las aplicaciones al hardware?</p><div class="kc-answers">
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Las aplicaciones son independientes del código del Sistema Operativo; no comparten código fuente con él." onclick="checkAnswer(this)">Porque todas las aplicaciones comparten el mismo código fuente que el sistema operativo.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="No es un tema de velocidad, sino de seguridad y control: dejar pasar solicitudes sin supervisión pondría en riesgo todo el sistema." onclick="checkAnswer(this)">Porque el hardware es demasiado lento para atender solicitudes directas.</button>
+<button type="button" class="kc-answer" data-correct="true" data-feedback="Así es: el Sistema Operativo se interpone para que ninguna aplicación pueda comprometer la estabilidad o seguridad del equipo." onclick="checkAnswer(this)">Porque sin control, una aplicación con errores o maliciosa podría dañar el hardware, corromper datos de otros procesos o hacer fallar todo el sistema.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Los permisos de administrador son otra cosa; aquí el punto es que ninguna aplicación, tenga o no esos permisos, puede tocar el hardware sin pasar por el SO." onclick="checkAnswer(this)">Porque las aplicaciones no tienen permisos de administrador en el equipo.</button>
+<p class="kc-feedback" aria-live="polite"></p></div></div>
+<div class="kc"><p class="kc-title">¿Cómo organiza el SO el uso de recursos como memoria, disco y dispositivos de entrada/salida?</p><div class="kc-answers">
+<button type="button" class="kc-answer" data-correct="true" data-feedback="Correcto: el SO centraliza el control de los recursos para que las aplicaciones no choquen entre sí al usarlos." onclick="checkAnswer(this)">Actuando como único intermediario: recibe las solicitudes de todas las aplicaciones y decide cómo, cuándo y en qué orden atenderlas.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Las aplicaciones no se comunican entre sí para repartirse recursos; eso sería inseguro y poco confiable. Esa función es exclusiva del SO." onclick="checkAnswer(this)">Dejando que cada aplicación negocie directamente con las demás el uso de los recursos.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Los recursos se comparten de forma ordenada entre todas las aplicaciones que los necesiten, no se reservan de forma permanente para una sola." onclick="checkAnswer(this)">Asignando un recurso completo y exclusivo a la primera aplicación que se instala.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="El SO gestiona el acceso y el orden de atención, no apaga recursos; estos permanecen disponibles para cuando se necesiten." onclick="checkAnswer(this)">Apagando temporalmente los recursos que no estén en uso por ninguna aplicación.</button>
+<p class="kc-feedback" aria-live="polite"></p></div></div>
+<div class="kc"><p class="kc-title">¿Qué riesgos se evitarían gracias a la intermediación del SO?</p><div class="kc-answers">
+<button type="button" class="kc-answer" data-correct="false" data-feedback="El consumo energético no es el riesgo que atiende la intermediación del SO; su función es la seguridad y estabilidad del sistema." onclick="checkAnswer(this)">Que el computador consuma más energía eléctrica de la necesaria.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="El tiempo de instalación no tiene relación con que el SO controle el acceso al hardware." onclick="checkAnswer(this)">Que las aplicaciones tarden más en instalarse.</button>
+<button type="button" class="kc-answer" data-correct="true" data-feedback="Exacto: al controlar el acceso, el SO evita fallos en cadena y protege la integridad del sistema completo." onclick="checkAnswer(this)">Que una aplicación con errores o maliciosa dañe el hardware, corrompa datos de otros procesos, o haga que todo el sistema falle o quede vulnerable.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Actualizar o no los programas es una decisión del usuario, no un riesgo relacionado con el control de acceso al hardware." onclick="checkAnswer(this)">Que el usuario olvide actualizar sus programas con frecuencia.</button>
+<p class="kc-feedback" aria-live="polite"></p></div></div>
+<div class="kc"><p class="kc-title">¿Qué ventajas ofrece compartir el hardware entre múltiples aplicaciones a través del SO?</p><div class="kc-answers">
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Compartir el hardware a través del SO no elimina la necesidad de mantenimiento del equipo." onclick="checkAnswer(this)">El hardware deja de necesitar mantenimiento o actualizaciones.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Las aplicaciones comparten el mismo hardware físico; no reciben un procesador exclusivo cada una." onclick="checkAnswer(this)">Cada aplicación obtiene su propio procesador físico independiente.</button>
+<button type="button" class="kc-answer" data-correct="true" data-feedback="Correcto: esa es justamente la ventaja de la intermediación, varias apps conviven sin chocar por los mismos recursos." onclick="checkAnswer(this)">Varias aplicaciones pueden funcionar al mismo tiempo sin interferir entre sí, porque el mismo hardware se reparte de forma ordenada y segura.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Es justo lo contrario: es gracias al Sistema Operativo que pueden compartir el hardware de forma ordenada." onclick="checkAnswer(this)">Las aplicaciones pueden ejecutarse sin necesidad de un sistema operativo.</button>
+<p class="kc-feedback" aria-live="polite"></p></div></div>
+</div>
+<hr>
+<div class="text-block"></div>
+
+<div class="embed-wrap">
+  <iframe src="embed-01-1.html" loading="lazy" style="width:100%;min-height:760px;border:0;" title="Actividad interactiva"></iframe>
+  <p class="embed-link"><a href="embed-01-1.html" target="_blank" rel="noopener">Abrir esta actividad en una pestaña nueva ↗</a></p>
+</div>
+
+<div class="text-block"></div>
+<div class="prevnext">
+<a class="prev" href="00-presentaci-n-y-diagn-stico-del-ova.html">← Presentación y Diagnóstico del OVA</a>
+<a class="next" href="02-2-llamada-al-sistema-system-call-y-su-fu.html">2. Llamada al Sistema (System Call) y su Función →</a>
+</div>
+</main>
+</div>
+<footer class="site-footer">
+  <p>Objeto Virtual de Aprendizaje — Universidad Francisco de Paula Santander (UFPS) · Ingeniería de Sistemas · Multimedia y Realidad Mixta</p>
+  <p>Juan Daniel Torres Morales · Alejandro Ovallos Torrado · Faiber Sleyder Galvis Romero</p>
+</footer>
+</body>
+</html>

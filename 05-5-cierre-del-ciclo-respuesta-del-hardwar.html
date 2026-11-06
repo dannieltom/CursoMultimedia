@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5. Cierre del Ciclo: Respuesta del Hardware al Software — Sistema Operativo: Intermediario entre Software y Hardware</title>
+<link rel="stylesheet" href="style.css">
+<script src="app.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Sistema Operativo: Intermediario entre Software y Hardware</a>
+  <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')" aria-label="Menú">☰</button>
+</header>
+<div class="layout">
+<nav class="site-nav">
+  <ol>
+  <li><a href="index.html">Inicio</a></li>
+<li><a href="00-presentaci-n-y-diagn-stico-del-ova.html">Presentación y Diagnóstico del OVA</a></li>
+<li><a href="01-1-introducci-n.html">1. Introducción</a></li>
+<li><a href="02-2-llamada-al-sistema-system-call-y-su-fu.html">2. Llamada al Sistema (System Call) y su Función</a></li>
+<li><a href="03-3-modos-de-ejecuci-n-usuario-y-kernel.html">3. Modos de Ejecución: Usuario y Kernel</a></li>
+<li><a href="04-4-interrupciones-y-drivers-en-la-comunic.html">4. Interrupciones y Drivers en la Comunicación SO-Hardware</a></li>
+<li class="active"><a href="05-5-cierre-del-ciclo-respuesta-del-hardwar.html">5. Cierre del Ciclo: Respuesta del Hardware al Software</a></li>
+<li><a href="06-actividad-integradora-simulador-del-fluj.html">Actividad integradora: Simulador del flujo de registro del proceso</a></li>
+  </ol>
+</nav>
+<main class="content">
+<h1>5. Cierre del Ciclo: Respuesta del Hardware al Software</h1>
+<div class="text-block"></div>
+<div class="text-block"></div>
+
+<figure class="course-image">
+  <img src="notificaci%C3%B3n-del-sistema-.jpg" alt="" loading="lazy">
+  <figcaption><div data-editor-id="68a60adb-d230-42ac-9ac4-70ddd51eed2c"><p><span style="font-size: 1.2rem">notificación del sistema confirmando que una tarea finalizó con éxito (“Documento guardado” o “Impresión completada”)</span></p></div></figcaption>
+</figure>
+<div class="text-block"></div>
+<div class="text-block"></div>
+
+<figure class="course-image">
+  <img src="5-1_mapa_mental_cierre_del.jpg" alt="" loading="lazy">
+  <figcaption><div data-editor-id="e9c10bc1-2ee1-42b7-8640-c77e29486cf7"><p>mapa mental: resume todo el recorrido.</p></div></figcaption>
+</figure>
+<div class="text-block"></div>
+<div class="text-block"></div>
+<div class="flashcard-grid">
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>SYSTEM CALL</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Una System Call es una interfaz que permite a los programas solicitar servicios al sistema operativo, como acceso a archivos.</p><p><em>Ejemplo:</em> Una aplicación solicita abrir un archivo usando la llamada al sistema 'open()'.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>MODO KERNEL</strong></div>
+    <div class="flashcard-face flashcard-back"><p>El Modo Kernel es un nivel de privilegio del procesador que permite ejecutar código con acceso completo al hardware.</p><p><em>Ejemplo:</em> El sistema operativo gestiona la memoria en modo kernel para proteger los datos.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>DRIVER</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Un Driver es un software que permite la comunicación entre el sistema operativo y un dispositivo de hardware.</p><p><em>Ejemplo:</em> El driver de una impresora traduce las instrucciones de impresión para el dispositivo.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>INTERRUPCIÓN</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Una Interrupción es una señal que indica al procesador que detenga su tarea actual para atender un evento urgente.</p><p><em>Ejemplo:</em> Una tecla presionada genera una interrupción para que el sistema registre la entrada.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>MANEJADOR DE INTERRUPCIONES</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Un Manejador de Interrupciones es un programa que responde a una interrupción específica y realiza las acciones necesarias.</p><p><em>Ejemplo:</em> El manejador procesa la señal de un mouse para mover el cursor en pantalla.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>MODO USUARIO</strong></div>
+    <div class="flashcard-face flashcard-back"><p>El Modo Usuario es un nivel de ejecución restringido donde las aplicaciones operan sin acceso directo al hardware.</p><p><em>Ejemplo:</em> Un navegador web funciona en modo usuario para evitar alterar el sistema operativo.</p></div>
+  </div>
+</div>
+</div>
+<p class="hint">Haz clic en cada tarjeta para ver la respuesta.</p>
+<div class="kc-wrap">
+<div class="kc" data-qtype="match"><p class="kc-title">Relaciona cada concepto con su descripción correspondiente.</p>
+<div class="match-wrap"><div class="match-terms">
+<button type="button" class="match-term" onclick="selectMatch(this)">Modo Kernel</button>
+<button type="button" class="match-term" onclick="selectMatch(this)">Driver</button>
+<button type="button" class="match-term" onclick="selectMatch(this)">System Call</button>
+<button type="button" class="match-term" onclick="selectMatch(this)">Manejador de Interrupciones</button>
+<button type="button" class="match-term" onclick="selectMatch(this)">Modo Usuario</button>
+<button type="button" class="match-term" onclick="selectMatch(this)">Interrupción</button>
+</div><div class="match-defs">
+<button type="button" class="match-def" onclick="selectMatchDef(this)">Rutina del sistema operativo que procesa y responde a las interrupciones del hardware.</button>
+<button type="button" class="match-def" onclick="selectMatchDef(this)">Software que traduce las solicitudes del sistema operativo en comandos específicos para un dispositivo.</button>
+<button type="button" class="match-def" onclick="selectMatchDef(this)">Solicitud formal de un servicio hecha por una aplicación al sistema operativo.</button>
+<button type="button" class="match-def" onclick="selectMatchDef(this)">Nivel de privilegio en el que se ejecutan las aplicaciones y procesos no críticos.</button>
+<button type="button" class="match-def" onclick="selectMatchDef(this)">Nivel de privilegio en el que el sistema operativo interactúa directamente con el hardware.</button>
+<button type="button" class="match-def" onclick="selectMatchDef(this)">Señal enviada por el hardware para indicar que una tarea ha sido completada o requiere atención.</button>
+</div></div>
+<script>registerMatching({"Modo Kernel": "Nivel de privilegio en el que el sistema operativo interactúa directamente con el hardware.", "Driver": "Software que traduce las solicitudes del sistema operativo en comandos específicos para un dispositivo.", "System Call": "Solicitud formal de un servicio hecha por una aplicación al sistema operativo.", "Manejador de Interrupciones": "Rutina del sistema operativo que procesa y responde a las interrupciones del hardware.", "Modo Usuario": "Nivel de privilegio en el que se ejecutan las aplicaciones y procesos no críticos.", "Interrupción": "Señal enviada por el hardware para indicar que una tarea ha sido completada o requiere atención."});</script>
+<p class="kc-feedback" aria-live="polite"></p></div>
+</div>
+<div class="text-block"></div>
+<hr>
+<div class="text-block"></div>
+<div class="prevnext">
+<a class="prev" href="04-4-interrupciones-y-drivers-en-la-comunic.html">← 4. Interrupciones y Drivers en la Comunicación SO-Hardware</a>
+<a class="next" href="06-actividad-integradora-simulador-del-fluj.html">Actividad integradora: Simulador del flujo de registro del proceso →</a>
+</div>
+</main>
+</div>
+<footer class="site-footer">
+  <p>Objeto Virtual de Aprendizaje — Universidad Francisco de Paula Santander (UFPS) · Ingeniería de Sistemas · Multimedia y Realidad Mixta</p>
+  <p>Juan Daniel Torres Morales · Alejandro Ovallos Torrado · Faiber Sleyder Galvis Romero</p>
+</footer>
+</body>
+</html>

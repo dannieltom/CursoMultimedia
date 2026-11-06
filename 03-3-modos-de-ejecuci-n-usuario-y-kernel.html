@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3. Modos de Ejecución: Usuario y Kernel — Sistema Operativo: Intermediario entre Software y Hardware</title>
+<link rel="stylesheet" href="style.css">
+<script src="app.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Sistema Operativo: Intermediario entre Software y Hardware</a>
+  <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')" aria-label="Menú">☰</button>
+</header>
+<div class="layout">
+<nav class="site-nav">
+  <ol>
+  <li><a href="index.html">Inicio</a></li>
+<li><a href="00-presentaci-n-y-diagn-stico-del-ova.html">Presentación y Diagnóstico del OVA</a></li>
+<li><a href="01-1-introducci-n.html">1. Introducción</a></li>
+<li><a href="02-2-llamada-al-sistema-system-call-y-su-fu.html">2. Llamada al Sistema (System Call) y su Función</a></li>
+<li class="active"><a href="03-3-modos-de-ejecuci-n-usuario-y-kernel.html">3. Modos de Ejecución: Usuario y Kernel</a></li>
+<li><a href="04-4-interrupciones-y-drivers-en-la-comunic.html">4. Interrupciones y Drivers en la Comunicación SO-Hardware</a></li>
+<li><a href="05-5-cierre-del-ciclo-respuesta-del-hardwar.html">5. Cierre del Ciclo: Respuesta del Hardware al Software</a></li>
+<li><a href="06-actividad-integradora-simulador-del-fluj.html">Actividad integradora: Simulador del flujo de registro del proceso</a></li>
+  </ol>
+</nav>
+<main class="content">
+<h1>3. Modos de Ejecución: Usuario y Kernel</h1>
+<div class="text-block"></div>
+<div class="text-block"></div>
+
+<figure class="course-image">
+  <img src="pantalla-de-error-o-bloque.jpg" alt="" loading="lazy">
+  <figcaption><div data-editor-id="80be1e26-0480-4015-9408-6c430635b188"><p><span style="font-size: 1.2rem">pantalla de error o bloqueo del sistema, por ejemplo un aviso de “la aplicación no responde"</span></p></div></figcaption>
+</figure>
+
+<figure class="course-video">
+  <video controls preload="metadata">
+    <source src="" type="video/mp4">
+    Tu navegador no soporta video HTML5.
+  </video>
+  <figcaption></figcaption>
+</figure>
+<div class="text-block"></div>
+
+<figure class="course-image">
+  <img src="3-1_infografia_modo_usuari.jpg" alt="" loading="lazy">
+  <figcaption><div data-editor-id="3e88fa2a-dd60-423c-ace6-d6fda28acd31"><p><span style="font-size: 1.3rem">privilegios, riesgos y ejemplos de cada modo</span></p></div></figcaption>
+</figure>
+<div class="text-block"></div>
+<div class="text-block"></div>
+<div class="accordion">
+
+<details class="accordion-item">
+  <summary>¿Por qué es peligroso que una aplicación tenga acceso al modo kernel?</summary>
+  <div class="accordion-body"><p>El modo kernel es un nivel privilegiado de operación en un sistema operativo que permite acceso directo a los recursos de hardware y memoria. Si una aplicación no confiable obtiene acceso a este modo, podría realizar cambios no autorizados, comprometer la seguridad del sistema o causar fallos críticos. Por esta razón, los sistemas operativos modernos implementan estrictos controles para limitar el acceso al modo kernel.</p><p></p><p>Además, el acceso no controlado al modo kernel podría permitir a un atacante ejecutar código malicioso con privilegios elevados. Esto podría resultar en la exposición de datos sensibles o en la interrupción de servicios esenciales. Por lo tanto, es crucial mantener una separación clara entre el modo usuario y el modo kernel para garantizar la estabilidad y seguridad del sistema.</p></div>
+</details>
+
+<details class="accordion-item">
+  <summary>¿Qué tareas solo puede realizar el modo kernel?</summary>
+  <div class="accordion-body"><p>El modo kernel es responsable de gestionar las operaciones críticas del sistema operativo. Esto incluye la administración de la memoria, la gestión de procesos y la comunicación con dispositivos de hardware. Estas tareas requieren un acceso privilegiado para garantizar que se realicen de manera segura y eficiente.</p><p></p><p>Además, el modo kernel maneja las interrupciones del sistema y las llamadas al sistema (system calls) realizadas por las aplicaciones en modo usuario. Estas funciones son esenciales para el funcionamiento del sistema y no pueden ser realizadas directamente por aplicaciones en modo usuario debido a las restricciones de seguridad.</p></div>
+</details>
+
+<details class="accordion-item">
+  <summary>¿Cómo protege el modo usuario la estabilidad del sistema?</summary>
+  <div class="accordion-body"><p>El modo usuario limita las capacidades de las aplicaciones para interactuar directamente con el hardware y los recursos críticos del sistema. Esto previene que errores en las aplicaciones afecten la estabilidad general del sistema operativo. Al operar en un entorno restringido, las aplicaciones no pueden realizar cambios no autorizados en el sistema.</p><p></p><p>Además, el modo usuario permite que el sistema operativo controle y supervise las acciones de las aplicaciones. Si una aplicación intenta realizar una operación no permitida, el sistema operativo puede intervenir y evitar posibles daños. Esto ayuda a mantener un entorno de ejecución seguro y estable para todas las aplicaciones.</p></div>
+</details>
+
+<details class="accordion-item">
+  <summary>¿Cuándo y cómo ocurre el cambio de modo durante una System Call o una interrupción?</summary>
+  <div class="accordion-body"><p>El cambio de modo de usuario a modo kernel ocurre cuando una aplicación realiza una llamada al sistema (system call) o cuando se produce una interrupción de hardware. Durante este proceso, el sistema operativo transfiere el control al kernel para manejar la solicitud o interrupción de manera segura.</p><p></p><p>Este cambio implica guardar el estado actual del procesador y cargar un nuevo contexto de ejecución con privilegios elevados. Una vez que el kernel completa la tarea requerida, el sistema vuelve al modo usuario, restaurando el estado anterior del procesador. Este mecanismo asegura que las operaciones críticas se realicen de manera controlada y sin comprometer la seguridad del sistema.</p></div>
+</details>
+</div>
+<div class="text-block"></div>
+<div class="flashcard-grid">
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>MODO USUARIO</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Modo de operación del sistema operativo donde las aplicaciones se ejecutan con permisos limitados. Ejemplo: Ejecutar un navegador web.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>MODO KERNEL</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Modo de operación con acceso completo al hardware y recursos del sistema. Ejemplo: Gestión de memoria por el sistema operativo.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>PRIVILEGIOS</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Niveles de acceso asignados a procesos o usuarios para proteger recursos. Ejemplo: Un usuario estándar no puede instalar software.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>SEGURIDAD</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Medidas implementadas para proteger datos y recursos del sistema. Ejemplo: Uso de contraseñas para acceder al sistema.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>ESTABILIDAD</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Capacidad del sistema para operar sin fallos. Ejemplo: Un servidor que funciona continuamente sin interrupciones.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>SYSTEM CALL</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Interfaz que permite a las aplicaciones solicitar servicios al sistema operativo. Ejemplo: Abrir un archivo desde un programa.</p></div>
+  </div>
+</div>
+</div>
+<p class="hint">Haz clic en cada tarjeta para ver la respuesta.</p>
+<div class="process">
+
+<div class="process-item process-intro">
+  <h4>Introducción al Cambio de Modo durante una System Call</h4>
+  <div><p>El proceso de cambio de modo es fundamental para la seguridad y el funcionamiento de los sistemas operativos modernos. A continuación, se describe paso a paso cómo ocurre este cambio durante la atención de una System Call.</p></div>
+</div>
+
+<div class="process-item process-summary">
+  <h4>Resumen del Proceso de Cambio de Modo</h4>
+  <div><p>El cambio de modo durante una System Call permite que el sistema operativo ejecute operaciones críticas de manera segura, alternando entre el modo usuario y el modo kernel según sea necesario para proteger la integridad del sistema.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>La aplicación se ejecuta en modo usuario</h4>
+  <div><p>En este estado, la aplicación opera con permisos restringidos, limitando el acceso directo a los recursos críticos del sistema para garantizar la seguridad y estabilidad del sistema operativo.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>La aplicación solicita un servicio al sistema operativo mediante una System Call</h4>
+  <div><p>La aplicación realiza una llamada al sistema para solicitar servicios específicos, como acceso a archivos o comunicación en red, que requieren privilegios elevados.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>El procesador cambia a modo kernel</h4>
+  <div><p>El procesador cambia al modo kernel, habilitando el acceso completo a los recursos del sistema y permitiendo la ejecución de operaciones privilegiadas.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>El sistema operativo atiende la solicitud con privilegios completos</h4>
+  <div><p>El sistema operativo procesa la solicitud de la aplicación utilizando sus capacidades completas, asegurando que las operaciones se realicen de manera segura y eficiente.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>El sistema operativo finaliza la atención y devuelve el control a la aplicación</h4>
+  <div><p>Una vez completada la solicitud, el sistema operativo prepara los resultados y se dispone a devolver el control al contexto de la aplicación.</p></div>
+</div>
+
+<div class="process-item process-step">
+  <h4>El procesador retorna a modo usuario</h4>
+  <div><p>El procesador regresa al modo usuario, restaurando las restricciones de acceso y devolviendo el control a la aplicación que realizó la solicitud.</p></div>
+</div>
+</div>
+<div class="text-block"></div>
+<div class="accordion">
+
+<details class="accordion-item">
+  <summary>Modo usuario</summary>
+  <div class="accordion-body"><p>El modo usuario es un entorno de operación en el que las aplicaciones y programas se ejecutan con permisos limitados. Esto asegura que las acciones realizadas por el software no interfieran con el núcleo del sistema operativo, proporcionando una capa de seguridad adicional.</p><p></p><p>En este modo, los procesos tienen acceso restringido al hardware y a los recursos críticos del sistema. Esto permite que el sistema operativo mantenga la estabilidad y prevenga que errores en las aplicaciones afecten el funcionamiento general del sistema.</p></div>
+</details>
+
+<details class="accordion-item">
+  <summary>Modo kernel</summary>
+  <div class="accordion-body"><p>El modo kernel es un entorno de operación donde el sistema operativo tiene acceso completo a todos los recursos del hardware. En este modo, se ejecutan las funciones críticas del sistema, como la gestión de memoria, el control de dispositivos y la administración de procesos.</p><p></p><p>Este modo permite que el sistema operativo interactúe directamente con el hardware, lo que es esencial para realizar tareas de bajo nivel. Sin embargo, también implica que cualquier error en este nivel puede tener consecuencias graves para la estabilidad del sistema.</p></div>
+</details>
+</div>
+<div class="text-block"></div>
+<div class="kc-wrap">
+<div class="kc" data-qtype="mc"><p class="kc-title">¿Cuál es la principal función del modo usuario en un sistema operativo?</p><div class="kc-answers">
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Esta opción es incorrecta porque el modo usuario restringe el acceso directo a los recursos del sistema para proteger la seguridad y estabilidad." onclick="checkAnswer(this)">Permitir el acceso directo a todos los recursos del sistema</button>
+<button type="button" class="kc-answer" data-correct="true" data-feedback="Esta es la respuesta correcta. El modo usuario limita los privilegios de las aplicaciones para evitar que acciones maliciosas o errores afecten la estabilidad y seguridad del sistema." onclick="checkAnswer(this)">Restringir los privilegios de las aplicaciones para proteger la estabilidad y seguridad del sistema</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Esta opción es incorrecta porque el núcleo del sistema operativo se ejecuta en modo núcleo, no en modo usuario." onclick="checkAnswer(this)">Ejecutar el núcleo del sistema operativo</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Esta opción es incorrecta porque la administración directa del hardware es responsabilidad del modo núcleo, no del modo usuario." onclick="checkAnswer(this)">Administrar directamente los dispositivos de hardware</button>
+<p class="kc-feedback" aria-live="polite"></p></div></div>
+</div>
+<div class="kc-wrap">
+<div class="kc" data-qtype="mc"><p class="kc-title">Seleccione la opción que mejor complete la frase: El modo kernel se caracteriza por:</p><div class="kc-answers">
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Esta opción es incorrecta porque el modo kernel ejecuta código privilegiado del sistema operativo, no aplicaciones de usuario." onclick="checkAnswer(this)">Ejecutar únicamente aplicaciones de usuario</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Esta opción es incorrecta porque el modo kernel tiene acceso completo a la memoria, no la restringe." onclick="checkAnswer(this)">Restringir el acceso a la memoria</button>
+<button type="button" class="kc-answer" data-correct="true" data-feedback="Esta opción es correcta porque el modo kernel permite al sistema operativo controlar directamente el hardware y todos los recursos del sistema." onclick="checkAnswer(this)">Tener privilegios completos para gestionar el hardware y los recursos del sistema</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Esta opción es incorrecta porque el modo kernel no limita el acceso, sino que tiene acceso total a los recursos del sistema." onclick="checkAnswer(this)">Limitar el acceso a los recursos del sistema</button>
+<p class="kc-feedback" aria-live="polite"></p></div></div>
+</div>
+<div class="text-block"></div>
+<hr>
+<div class="text-block"></div>
+<div class="prevnext">
+<a class="prev" href="02-2-llamada-al-sistema-system-call-y-su-fu.html">← 2. Llamada al Sistema (System Call) y su Función</a>
+<a class="next" href="04-4-interrupciones-y-drivers-en-la-comunic.html">4. Interrupciones y Drivers en la Comunicación SO-Hardware →</a>
+</div>
+</main>
+</div>
+<footer class="site-footer">
+  <p>Objeto Virtual de Aprendizaje — Universidad Francisco de Paula Santander (UFPS) · Ingeniería de Sistemas · Multimedia y Realidad Mixta</p>
+  <p>Juan Daniel Torres Morales · Alejandro Ovallos Torrado · Faiber Sleyder Galvis Romero</p>
+</footer>
+</body>
+</html>

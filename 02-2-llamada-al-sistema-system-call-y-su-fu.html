@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2. Llamada al Sistema (System Call) y su Función — Sistema Operativo: Intermediario entre Software y Hardware</title>
+<link rel="stylesheet" href="style.css">
+<script src="app.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Sistema Operativo: Intermediario entre Software y Hardware</a>
+  <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')" aria-label="Menú">☰</button>
+</header>
+<div class="layout">
+<nav class="site-nav">
+  <ol>
+  <li><a href="index.html">Inicio</a></li>
+<li><a href="00-presentaci-n-y-diagn-stico-del-ova.html">Presentación y Diagnóstico del OVA</a></li>
+<li><a href="01-1-introducci-n.html">1. Introducción</a></li>
+<li class="active"><a href="02-2-llamada-al-sistema-system-call-y-su-fu.html">2. Llamada al Sistema (System Call) y su Función</a></li>
+<li><a href="03-3-modos-de-ejecuci-n-usuario-y-kernel.html">3. Modos de Ejecución: Usuario y Kernel</a></li>
+<li><a href="04-4-interrupciones-y-drivers-en-la-comunic.html">4. Interrupciones y Drivers en la Comunicación SO-Hardware</a></li>
+<li><a href="05-5-cierre-del-ciclo-respuesta-del-hardwar.html">5. Cierre del Ciclo: Respuesta del Hardware al Software</a></li>
+<li><a href="06-actividad-integradora-simulador-del-fluj.html">Actividad integradora: Simulador del flujo de registro del proceso</a></li>
+  </ol>
+</nav>
+<main class="content">
+<h1>2. Llamada al Sistema (System Call) y su Función</h1>
+<div class="text-block"></div>
+
+<figure class="course-image">
+  <img src="aplicaci%C3%B3n-realizando-una.jpg" alt="" loading="lazy">
+  <figcaption><div data-editor-id="a8622a0f-5a53-40e2-a66c-b3ae8c2cee0a"><p>Una aplicación puede realizar acciones cotidianas, como guardar un archivo o imprimir un documento.</p></div></figcaption>
+</figure>
+<div class="text-block"></div>
+<div class="text-block"></div>
+<div class="text-block"></div>
+
+<figure class="course-image">
+  <img src="2-1_diagrama_flujo_system_.png" alt="" loading="lazy">
+  <figcaption><div data-editor-id="682d3176-220b-4778-b99f-cebf2384a58c"><p><span style="font-size: 1.2rem">Aplicación → System Call → Sistema Operativo</span></p></div></figcaption>
+</figure>
+<div class="text-block"></div>
+<div class="accordion">
+
+<details class="accordion-item">
+  <summary>¿Por qué las aplicaciones no pueden acceder directamente al hardware?</summary>
+  <div class="accordion-body"><p>Las aplicaciones no pueden acceder directamente al hardware para garantizar la seguridad y estabilidad del sistema. Este enfoque evita que programas maliciosos o con errores interfieran con el funcionamiento del hardware, lo que podría causar fallos o daños. Además, el sistema operativo actúa como un intermediario que gestiona los recursos de manera eficiente y equitativa entre las aplicaciones.</p><p></p><p>Al restringir el acceso directo, se asegura que las operaciones críticas sean controladas y monitoreadas adecuadamente. Esto también permite la implementación de políticas de acceso y uso que optimizan el rendimiento general del sistema.</p></div>
+</details>
+
+<details class="accordion-item">
+  <summary>¿Qué tipos de servicios se solicitan mediante System Calls?</summary>
+  <div class="accordion-body"><p>Las System Calls permiten a las aplicaciones solicitar servicios esenciales del sistema operativo. Entre estos servicios se incluyen la gestión de archivos, como abrir, leer o escribir en un archivo, y la administración de procesos, como la creación y terminación de procesos. También abarcan la comunicación entre procesos y el acceso a dispositivos de hardware.</p><p></p><p>Estos servicios son fundamentales para que las aplicaciones interactúen con el sistema operativo de manera controlada y segura. Proveen una interfaz estándar que abstrae la complejidad del hardware subyacente.</p></div>
+</details>
+
+<details class="accordion-item">
+  <summary>¿Qué riesgos se evitan con el uso de System Calls?</summary>
+  <div class="accordion-body"><p>El uso de System Calls ayuda a mitigar varios riesgos asociados con el acceso directo al hardware. Por ejemplo, previenen conflictos entre aplicaciones que intentan usar los mismos recursos simultáneamente. También protegen contra accesos no autorizados a datos sensibles o recursos críticos del sistema.</p><p></p><p>Además, las System Calls permiten al sistema operativo implementar medidas de seguridad, como la validación de permisos y la supervisión de actividades sospechosas. Esto contribuye a mantener la integridad y la estabilidad del sistema.</p></div>
+</details>
+
+<details class="accordion-item">
+  <summary>¿Cómo se transfiere el control del procesador al Sistema Operativo?</summary>
+  <div class="accordion-body"><p>El control del procesador se transfiere al sistema operativo mediante interrupciones y excepciones. Cuando una aplicación realiza una System Call, se genera una interrupción que notifica al sistema operativo para que tome el control. Este proceso asegura que las operaciones solicitadas se ejecuten de manera controlada y segura.</p><p></p><p>Las interrupciones también se utilizan para manejar eventos del hardware, como la llegada de datos desde un dispositivo de entrada. Esto permite que el sistema operativo responda rápidamente a eventos importantes mientras mantiene el control general del sistema.</p></div>
+</details>
+</div>
+<div class="text-block"></div>
+<div class="flashcard-grid">
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>SYSTEM CALL</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Una System Call es una interfaz que permite a los programas solicitar servicios al sistema operativo.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>KERNEL</strong></div>
+    <div class="flashcard-face flashcard-back"><p>El Kernel es el núcleo del sistema operativo que gestiona los recursos y la comunicación entre hardware y software.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>MODO USUARIO</strong></div>
+    <div class="flashcard-face flashcard-back"><p>El Modo Usuario es un nivel de operación donde las aplicaciones se ejecutan con restricciones para proteger el sistema.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>SERVICIO DEL SISTEMA OPERATIVO</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Un Servicio del Sistema Operativo es una funcionalidad que proporciona soporte a las aplicaciones y usuarios.</p></div>
+  </div>
+</div>
+
+<div class="flashcard" tabindex="0" onclick="this.classList.toggle('flipped')">
+  <div class="flashcard-inner">
+    <div class="flashcard-face flashcard-front"><strong>PRIVILEGIOS</strong></div>
+    <div class="flashcard-face flashcard-back"><p>Los Privilegios son niveles de acceso que determinan qué operaciones puede realizar un usuario o proceso.</p></div>
+  </div>
+</div>
+</div>
+<p class="hint">Haz clic en cada tarjeta para ver la respuesta.</p>
+<hr>
+<div class="text-block"></div>
+<div class="text-block"></div>
+<div class="kc-wrap">
+<div class="kc" data-qtype="mc"><p class="kc-title">¿Cuál de las siguientes acciones SÍ requiere una System Call?</p><div class="kc-answers">
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Esta acción se realiza dentro del programa y no necesita comunicación con el sistema operativo." onclick="checkAnswer(this)">Mostrar un resultado ya calculado en una variable local.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Aunque puede parecer que requiere una System Call, esta acción generalmente se maneja a nivel de la interfaz gráfica sin acceso directo al hardware." onclick="checkAnswer(this)">Cerrar una ventana de la interfaz gráfica.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Esta acción se realiza completamente dentro del espacio de usuario y no requiere interacción con el sistema operativo." onclick="checkAnswer(this)">Sumar dos variables dentro del mismo programa.</button>
+<button type="button" class="kc-answer" data-correct="true" data-feedback="Esta acción requiere acceso al hardware a través del sistema operativo, lo que implica el uso de una System Call." onclick="checkAnswer(this)">Leer un archivo del disco duro.</button>
+<p class="kc-feedback" aria-live="polite"></p></div></div>
+</div>
+<div class="kc-wrap">
+<div class="kc" data-qtype="mc"><p class="kc-title">La System Call es la puerta de entrada hacia:</p><div class="kc-answers">
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Incorrecto. Las aplicaciones no acceden directamente al hardware; lo hacen a través del Sistema Operativo mediante System Calls." onclick="checkAnswer(this)">El hardware directamente.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Incorrecto. Las System Calls no se utilizan para comunicarse directamente con otras aplicaciones de usuario." onclick="checkAnswer(this)">Otra aplicación del usuario.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Incorrecto. La memoria caché del navegador no está relacionada con las System Calls." onclick="checkAnswer(this)">La memoria caché del navegador.</button>
+<button type="button" class="kc-answer" data-correct="true" data-feedback="Correcto. Las System Calls permiten a las aplicaciones solicitar servicios al núcleo del Sistema Operativo." onclick="checkAnswer(this)">El núcleo (kernel) del Sistema Operativo.</button>
+<p class="kc-feedback" aria-live="polite"></p></div></div>
+</div>
+<div class="kc-wrap">
+<div class="kc" data-qtype="mc"><p class="kc-title">Antes de invocar una llamada al sistema, ¿en qué modo se ejecuta una aplicación?</p><div class="kc-answers">
+<button type="button" class="kc-answer" data-correct="true" data-feedback="Correcto. Las aplicaciones se ejecutan en modo usuario antes de invocar una llamada al sistema para solicitar servicios del sistema operativo." onclick="checkAnswer(this)">Modo usuario</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="El modo depuración se utiliza para propósitos de depuración y no está relacionado con el modo de ejecución antes de una llamada al sistema." onclick="checkAnswer(this)">Modo depuración</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="El modo kernel es utilizado por el sistema operativo para ejecutar operaciones privilegiadas, no por aplicaciones antes de invocar una llamada al sistema." onclick="checkAnswer(this)">Modo kernel</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="El modo mantenimiento no es un modo de ejecución estándar para aplicaciones en sistemas operativos." onclick="checkAnswer(this)">Modo mantenimiento</button>
+<p class="kc-feedback" aria-live="polite"></p></div></div>
+</div>
+<div class="kc-wrap">
+<div class="kc" data-qtype="mc"><p class="kc-title">¿Qué ocurre justo después de que una aplicación invoca una System Call?</p><div class="kc-answers">
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Incorrecto. La aplicación continúa ejecutándose después de que el Sistema Operativo complete la solicitud." onclick="checkAnswer(this)">La aplicación finaliza su ejecución.</button>
+<button type="button" class="kc-answer" data-correct="true" data-feedback="Correcto. Este es el siguiente paso en el proceso de ejecución de una System Call." onclick="checkAnswer(this)">El procesador transfiere el control al Sistema Operativo.</button>
+<button type="button" class="kc-answer" data-correct="false" data-feedback="Incorrecto. El hardware no se apaga como parte del proceso de una System Call." onclick="checkAnswer(this)">El hardware se apaga temporalmente.</button>
+<p class="kc-feedback" aria-live="polite"></p></div></div>
+</div>
+<div class="prevnext">
+<a class="prev" href="01-1-introducci-n.html">← 1. Introducción</a>
+<a class="next" href="03-3-modos-de-ejecuci-n-usuario-y-kernel.html">3. Modos de Ejecución: Usuario y Kernel →</a>
+</div>
+</main>
+</div>
+<footer class="site-footer">
+  <p>Objeto Virtual de Aprendizaje — Universidad Francisco de Paula Santander (UFPS) · Ingeniería de Sistemas · Multimedia y Realidad Mixta</p>
+  <p>Juan Daniel Torres Morales · Alejandro Ovallos Torrado · Faiber Sleyder Galvis Romero</p>
+</footer>
+</body>
+</html>
